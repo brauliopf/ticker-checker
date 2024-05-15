@@ -73,7 +73,7 @@ async function fetchReport(data) {
     const messages = [
         {"role": "system", "content": "You are a financial advisor hired to help clients diversify their investment portfolio with US stock market investments. \
          Your clients will bring up to 3 tickers which they are considering. You must provide a yes or no decision regarding an investment in each ticker. \
-         and a short reasoning for that decision based on recent movements of the stock price and any public news available at the time."},
+         and a short reasoning (with no more than 40 words for each) for that decision based on recent movements of the stock price and any public news available at the time."},
         {"role": "user", "content": tickersArr.join(', ')},
     ]
 
