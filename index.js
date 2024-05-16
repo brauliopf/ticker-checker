@@ -62,39 +62,29 @@ async function fetchStockData() {
 
 async function fetchReport(data) {
 
-    const messages = [
-        {"role": "system", "content": "You are a financial advisor hired to help clients diversify their investment portfolio with US stock market investments. \
-         Your clients will bring up to 3 tickers which they are considering. You must provide a yes or no decision regarding an investment in each ticker. \
-         and a short reasoning (with no more than 40 words for each) for that decision based on recent movements of the stock price and any public news available at the time."},
-        {"role": "user", "content": tickersArr.join(', ')},
-    ]
+    try {
+        const messages = [
+            {"role": "system", "content": "You are a financial advisor hired to help clients diversify their investment portfolio with US stock market investments. \
+            Your clients will bring up to 3 tickers which they are considering. You must provide a yes or no decision regarding an investment in each ticker. \
+            and a short reasoning (with no more than 40 words for each) for that decision based on recent movements of the stock price and any public news available at the time."},
+            {"role": "user", "content": tickersArr.join(', ')},
+        ]
 
-    fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${config.OPENAI_API_KEY}`
-        },
-        body: JSON.stringify({
-            "model": "gpt-3.5-turbo",
-            "messages": messages,
-            "temperature": 0.7, // This is the randomness of the output. The higher the number, the more random (daring) the output. Default to 1.
-            "max_tokens": 300, // This is the maximum number of tokens (~words) the model will output.
-            // stop: ['\n', '4.'] // Tells the model to stop generating text if it reaches any of the words in the list.
-            // presence_penalty: 0.5, // This is the penalty for repeating the same thing.
-            // frequency_penalty: 0.5, // This is the penalty for using the same word too often.
-        })
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+        const worker_URL = config.OPENAI_CLOUDFLARE_WORKER
+        const options = {
+            method: 'POST',
+            header: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(messages) // as defined in the header above, the body must be of type JSON
         }
-        return response.json();
-    }).then(data => {
-        console.log(data);
-        renderReport(data.choices[0].message.content)
-    }).catch(error => {
+
+        const response = await fetch(worker_URL, options)
+        const data = await response.json()
+        renderReport(data.content)
+    } catch(error) {
         console.error('There was a problem with the fetch operation:', error);
-    });
+    };
 
 }
 
