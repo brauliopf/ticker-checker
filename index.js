@@ -86,7 +86,11 @@ async function fetchReport(data) {
         body: JSON.stringify({
             "model": "gpt-3.5-turbo",
             "messages": messages,
-            "temperature": 0.7
+            "temperature": 0.7, // This is the randomness of the output. The higher the number, the more random (daring) the output. Default to 1.
+            "max_tokens": 300, // This is the maximum number of tokens (~words) the model will output.
+            // stop: ['\n', '4.'] // Tells the model to stop generating text if it reaches any of the words in the list.
+            // presence_penalty: 0.5, // This is the penalty for repeating the same thing.
+            // frequency_penalty: 0.5, // This is the penalty for using the same word too often.
         })
     }).then(response => {
         if (!response.ok) {
