@@ -3,8 +3,6 @@ import config from './config.js'; // Import the configuration file
 
 const tickersArr = []
 const generateReportBtn = document.querySelector('.btn#generate-report')
-// TODO: Use the OpenAI API instead of the npm package!
-// const openAI = new OpenAI(config.OPENAI_API_KEY);
 
 generateReportBtn.addEventListener('click', fetchStockData)
 
@@ -63,12 +61,6 @@ async function fetchStockData() {
 }
 
 async function fetchReport(data) {
-
-    // 4. You might have to experiment with the instructions you give the model to get a report you are happy with. For now, don't worry too much about the quality of the report as we will do some tweaking later. 
-
-    // 5. Call renderReport with the text you get back from the OpenAI API.
-
-    // 6. For bonus points, use a try catch to handle errors.
 
     const messages = [
         {"role": "system", "content": "You are a financial advisor hired to help clients diversify their investment portfolio with US stock market investments. \
