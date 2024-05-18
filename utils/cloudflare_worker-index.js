@@ -1,3 +1,4 @@
+// FILE PROVIDED FYI, NOT USED IN THIS PROJECT
 // create worker:  $npm create cloudflare@latest
 // deploy changes: $npx wrangler deploy
 // create env var: $npx wrangler secret put OPENAI_API_KEY 

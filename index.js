@@ -53,6 +53,18 @@ async function fetchStockData() {
                 loadingArea.innerText = 'There was an error fetching stock data.'
             }
         }))
+        // Polygon returns an array with the ticker and other related data
+        // For multiple tickers, it returns an array of arrays of size equals to number of tickers.
+
+        // For each array in the stockData array, remove the request_id from the array
+        stockData.forEach((tickerData) => {
+            const tickerDataArr = JSON.parse(tickerData).results
+            tickerDataArr.forEach((data) => {
+                delete data.request_id
+            })
+        })
+
+        // Pass it to openai as a string
         fetchReport(stockData.join(''))
     } catch(err) {
         loadingArea.innerText = 'There was an error fetching stock data.'
