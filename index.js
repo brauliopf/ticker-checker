@@ -43,6 +43,17 @@ async function fetchStockData() {
         // MUST HIDE API KEY FROM PRODUCTION VERSION!
         const stockData = await Promise.all(tickersArr.map(async (ticker) => {
             const url = `https://api.polygon.io/v2/aggs/ticker/${ticker}/range/1/day/${dates.startDate}/${dates.endDate}?apiKey=${config.POLYGONIO_API_KEY}`
+            // endpoint: aggregates | timespan: day | multiplier: 1
+            /* expected output:
+                "v": trading volume
+                "vw": volume weighted average price
+                "o": open price
+                "c": close price
+                "h": highest price
+                "l": lowest price
+                "t": start timestamp
+                "n": number of transactions
+            */
             const response = await fetch(url)
             const data = await response.text()
             const status = await response.status
@@ -72,14 +83,19 @@ async function fetchStockData() {
     }
 }
 
-async function fetchReport(data) {
+async function fetchReport(datan) {
 
     try {
+        console.log(datan)
         const messages = [
             {"role": "system", "content": "You are a financial advisor hired to help clients diversify their investment portfolio with US stock market investments. \
-            Your clients will bring up to 3 tickers which they are considering. You must provide a yes or no decision regarding an investment in each ticker. \
-            and a short reasoning (with no more than 40 words for each) for that decision based on recent movements of the stock price and any public news available at the time."},
-            {"role": "user", "content": tickersArr.join(', ')},
+            Your clients will bring up to 3 tickers which they are considering. You will be provided complete data from each day of the past 3 trading days, including: \
+                'v': trading volume, 'vw': volume weighted average price, 'o': open price, 'c': close price, \
+                'h': highest price, 'l': lowest price, 't': start timestamp, 'n': number of transactions. \
+            You must provide a yes or no decision regarding an investment in each ticker \
+            and a short reasoning (with no more than 50 words for each) for that decision based on data shared on the stock and any public news available. Do mention \
+            the maximum and minimum price of the stock in the past 3 days and, if is relevant, comment on the historical maxima as well."},
+            {"role": "user", "content": datan},
         ]
 
         const worker_URL = config.OPENAI_CLOUDFLARE_WORKER
