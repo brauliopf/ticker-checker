@@ -70,8 +70,8 @@ async function fetchStockData() {
         // For each array in the stockData array, remove the request_id from the array
         stockData.forEach((tickerData) => {
             const tickerDataArr = JSON.parse(tickerData).results
-            tickerDataArr.forEach((data) => {
-                delete data.request_id
+            tickerDataArr.forEach((td) => {
+                delete td.request_id
             })
         })
 
@@ -83,10 +83,9 @@ async function fetchStockData() {
     }
 }
 
-async function fetchReport(datan) {
+async function fetchReport(tickersReport_Polygon) {
 
     try {
-        console.log(datan)
         const messages = [
             {"role": "system", "content": "You are a financial advisor hired to help clients diversify their investment portfolio with US stock market investments. \
             Your clients will bring up to 3 tickers which they are considering. You will be provided complete data from each day of the past 3 trading days, including: \
@@ -95,7 +94,7 @@ async function fetchReport(datan) {
             You must provide a yes or no decision regarding an investment in each ticker \
             and a short reasoning (with no more than 50 words for each) for that decision based on data shared on the stock and any public news available. Do mention \
             the maximum and minimum price of the stock in the past 3 days and, if is relevant, comment on the historical maxima as well."},
-            {"role": "user", "content": datan},
+            {"role": "user", "content": tickersReport_Polygon},
         ]
 
         const worker_URL = config.OPENAI_CLOUDFLARE_WORKER
@@ -108,8 +107,8 @@ async function fetchReport(datan) {
         }
 
         const response = await fetch(worker_URL, options)
-        const data = await response.json()
-        renderReport(data.content)
+        const response_json = await response.json()
+        renderReport(response_json.content)
     } catch(error) {
         console.error('There was a problem with the fetch operation:', error);
     };
