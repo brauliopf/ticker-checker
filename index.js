@@ -108,9 +108,16 @@ async function fetchReport(tickersReport_Polygon) {
 
         const response = await fetch(worker_URL, options)
         const response_json = await response.json()
+
+        // handle error
+        if(!response.ok) {
+            throw new Error(`Worker error: ${response_json.error}`)
+        }
+        loadingArea.style.display = 'none'
         renderReport(response_json.content)
     } catch(error) {
-        console.error('There was a problem with the fetch operation:', error);
+        console.error('There was a problem with the fetch operation –', error);
+        loadingArea.innerText = 'Unable to access AI. Please refresh and try again'
     };
 
 }
