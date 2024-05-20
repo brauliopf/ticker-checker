@@ -40,46 +40,23 @@ async function fetchStockData() {
     document.querySelector('.action-panel').style.display = 'none'
     loadingArea.style.display = 'flex'
     try {
-        // MUST HIDE API KEY FROM PRODUCTION VERSION!
         const stockData = await Promise.all(tickersArr.map(async (ticker) => {
-            const url = `https://api.polygon.io/v2/aggs/ticker/${ticker}/range/1/day/${dates.startDate}/${dates.endDate}?apiKey=${config.POLYGONIO_API_KEY}`
-            // endpoint: aggregates | timespan: day | multiplier: 1
-            /* expected output:
-                "v": trading volume
-                "vw": volume weighted average price
-                "o": open price
-                "c": close price
-                "h": highest price
-                "l": lowest price
-                "t": start timestamp
-                "n": number of transactions
-            */
+            // GET ticket info from Polygon.io
+            const url = `${config.POLYGONIO_CLOUDFLARE_WORKER}?ticker=${ticker}&startDate=${dates.startDate}&endDate=${dates.endDate}`
             const response = await fetch(url)
-            const data = await response.text()
-            const status = await response.status
-            if (status === 200) {
-                apiMessage.innerText = 'Creating report...'
-                return data
-            } else {
-                loadingArea.innerText = 'There was an error fetching stock data.'
+            
+            // Digest output and handle error
+            if(!response.ok) {
+                const errMsg = await response.text()
+                throw new Error('Worker error: ' + errMsg)
             }
+            apiMessage.innerText = 'Creating report...'
+            return response.text()
         }))
-        // Polygon returns an array with the ticker and other related data
-        // For multiple tickers, it returns an array of arrays of size equals to number of tickers.
-
-        // For each array in the stockData array, remove the request_id from the array
-        stockData.forEach((tickerData) => {
-            const tickerDataArr = JSON.parse(tickerData).results
-            tickerDataArr.forEach((td) => {
-                delete td.request_id
-            })
-        })
-
-        // Pass it to openai as a string
         fetchReport(stockData.join(''))
-    } catch(err) {
+    } catch(err){
         loadingArea.innerText = 'There was an error fetching stock data.'
-        console.error('error: ', err)
+        console.error(err.message)
     }
 }
 
