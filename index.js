@@ -25,6 +25,10 @@ document.getElementById('ticker-input-form').addEventListener('submit', (e) => {
     }
 })
 
+document.querySelector('.btn#go-home').addEventListener('click', () => {
+    window.location.href = '/'
+})
+
 // Auxiliary functions
 function renderTickers() {
     /*  Reset the ticker display and render the tickers in tickerArr
