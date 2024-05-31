@@ -100,7 +100,10 @@ async function fetchReport(tickersReport_Polygon) {
             header: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(messages) // as defined in the header above, the body must be of type JSON
+            body: JSON.stringify({
+                model: 'gpt-3.5-turbo',
+                messages: messages
+            }) // as defined in the header above, the body must be of type JSON
         })
 
         // Handle Response
