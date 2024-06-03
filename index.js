@@ -94,8 +94,7 @@ async function fetchReport(tickersReport_Polygon) {
 
     try {
         // Make Request
-        // const OPENAI_WORKER_URL = 'https://openai-api-worker.brauliopf.workers.dev/'
-        const OPENAI_WORKER_URL = 'https://gateway.ai.cloudflare.com/v1/1e1320f6cccf62fa78229a99558ce6fd/tc-openai/'
+        const OPENAI_WORKER_URL = 'https://openai-api-worker.brauliopf.workers.dev/'
         const response = await fetch(OPENAI_WORKER_URL, {
             method: 'POST',
             header: {
