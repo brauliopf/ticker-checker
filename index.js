@@ -9,6 +9,9 @@ const apiMessage = document.getElementById('api-message')
 // Create js triggers
 generateReportBtn.addEventListener('click', fetchStockData)
 
+// ### UX/UI ###
+
+// Handle ticker selection form submission
 document.getElementById('ticker-input-form').addEventListener('submit', (e) => {
     e.preventDefault()
     const tickerInput = document.getElementById('ticker-input')
@@ -25,11 +28,12 @@ document.getElementById('ticker-input-form').addEventListener('submit', (e) => {
     }
 })
 
+// Handle ticker navigation to home
 document.querySelector('.btn#go-home').addEventListener('click', () => {
     window.location.href = '/'
 })
 
-// Auxiliary functions
+// ### Auxiliary functions ###
 function renderTickers() {
     /*  Reset the ticker display and render the tickers in tickerArr
     */
@@ -77,7 +81,6 @@ async function fetchStockData() {
         console.error(err.message)
     }
 }
-
 
 async function fetchReport(tickersReport_Polygon) {
 
